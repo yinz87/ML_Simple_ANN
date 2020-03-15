@@ -8,6 +8,7 @@ Created on Sun Mar  1 10:37:26 2020
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from collections import defaultdict
 
 class training():
     def __init__(self,inputs,labels,midlayer_size,output_size,learning_rate,iteration,):
@@ -87,7 +88,7 @@ class training():
         return (result)
        # print ("outputlayer",self.outputlayer.shape)
         
-    def main(self,testData=''):
+    def main(self,testData,testLabel):
         results = []
         for i in range (self.iteration):
             self.feedforward()
@@ -99,14 +100,22 @@ class training():
 
             
         sum_square_error,accuracy = zip(*results)
-
         plt.plot(sum_square_error)
         plt.xlabel("Epochs")
         plt.ylabel("Sum Square Error")
         plt.show()
         
-        testint_result = self.test_result(testData)
-        print (np.argmax(testint_result))
+        
+        correct = 0;
+
+        for i in range (np.size(testLabel)):
+            testint_result = self.test_result(testData[i])
+            if (np.argmax(testint_result)) == testLabel[i]:
+                correct += 1
+                
+        print ("The accruacy of the ANN is %f", correct/np.size(testLabel) * 100 )
+        
+    
         
 class data_set():
     
@@ -139,6 +148,7 @@ class data_set():
         #data_set = data_set.T
         label_set = np.zeros([10,10])
    
+     
         
         for i in range(10):
             label_set[i][i]=1
@@ -151,18 +161,71 @@ class data_set():
         return data_set,label_set
         
 
+class test_set():
+    
+    
+    def data(self):
 
+        
+        d1=[3,7,8,11,13,18,23,28,33,38,43]
+        d2=[4,7,8,11,13,18,23,28,33,38,43]
+        d3=[3,7,8,11,13,23,28,33,38,43]
+        d4=[2,3,4,6,10,15,20,24,28,32,36,41,42,43,44,45]
+        d5=[2,3,4,6,10,15,24,28,32,36,41,42,43,44,45]
+        d6=[2,3,4,6,10,15,20,24,28,32,36,42,43,44,45]
+        d7=[2,3,4,6,10,15,20,24,30,35,36,40,42,43,44]
+        d8=[2,3,4,6,15,20,24,30,35,36,40,42,43,44]
+        d9=[2,3,4,6,10,15,20,24,30,35,38,40,42,43,44]
+        d10=[4,8,9,13,14,18,19,22,24,26,29,31,32,33,34,35,39,44]
+        d11=[4,8,9,13,14,18,22,24,26,29,31,32,33,34,35,39,44]
+        d12=[4,8,9,13,14,18,19,22,24,26,29,30,32,33,34,35,39,44]
+        d13=[1,2,3,4,5,6,11,16,18,19,21,25,30,35,36,40,42,43,44]
+        d14=[1,2,3,4,5,6,11,16,17,18,19,21,25,30,35,36,40,42,43,44]
+        d15=[1,2,3,4,5,6,11,16,17,18,19,21,25,30,35,39,40,42,43,44]
+        d16=[2,3,4,6,10,11,16,21,22,23,24,26,30,31,35,36,40,42,43,44]
+        d17=[2,3,4,6,10,16,21,22,23,24,26,30,31,35,36,40,42,43,44]
+        d18=[2,3,4,6,10,11,16,21,22,23,24,26,30,31,35,39,40,42,43,44]
+        d19=[1,2,3,4,5,10,14,19,23,28,33,38,43]
+        d20=[1,2,3,4,5,10,14,19,23,28,33,43]
+        d21=[1,2,4,5,10,14,19,23,28,33,38,43]
+        d22=[2,3,4,6,10,11,15,16,20,22,23,24,26,30,31,36,36,40,42,43,44]
+        d23=[2,3,4,10,11,15,16,20,22,23,24,26,30,31,36,36,40,42,43,44]
+        d24=[2,3,4,6,10,11,15,16,20,22,23,25,26,30,31,36,36,40,42,43,44]
+        d25=[2,3,4,6,10,11,15,16,20,22,23,24,25,30,35,36,40,42,43,44]
+        d26=[2,3,4,6,10,11,15,16,20,22,23,25,30,35,36,40,42,43,44]
+        d27=[2,3,4,6,9,11,15,16,20,22,23,24,25,30,35,36,40,42,43,44]
+        d28=[2,3,4,6,10,11,16,21,26,31,36,42,43,44,15,20,25,30,35,40]
+        d29=[2,3,4,6,10,16,21,26,31,36,42,43,44,15,20,25,30,35,40]
+        d30=[2,3,4,6,10,11,16,21,26,31,36,42,43,44,17,20,25,30,35,40]
+        
 
+        test_set = []
+        test_label_set=[]
+        label = 1
+       
+        
+        for i in range(30):
+            temp_data = vars()["d"+str(i+1)]
+            d_shape = np.zeros(45)
+            for j in temp_data:
+                d_shape[j-1] = 1
+
+            test_set.append(d_shape)
+                    
+            test_label_set.append(label)
+            if (i+1)%3 == 0:
+                label += 1
+        return test_set,test_label_set
+    
 get_data = data_set()
 training_data,label_data = get_data.data()
+testing = test_set()
+testing_data,testing_label_data = testing.data()
 
-input_value = [3,7,8,11,13,18,23,28,33,38,43]
-input_test = np.zeros(45)
-for i in input_value:
-    input_test[i-1] = 1
 
 output_test = [0,1,0,0,0,0,0,0,0,0]
 #input_test = input_test.reshape(-1,1)
 output_test = np.asanyarray(output_test)#.reshape(-1,1)
-trainings = training(training_data,label_data,5,10,0.5,10000)
-trainings.main(input_test)
+trainings = training(training_data,label_data,5,10,1.5,10000)
+trainings.main(testing_data,testing_label_data)
+
