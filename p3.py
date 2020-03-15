@@ -106,15 +106,19 @@ class training():
         plt.show()
         
         
-        correct = 0;
-
+        correct = 0
+        incorrect = []
         for i in range (np.size(testLabel)):
             testint_result = self.test_result(testData[i])
             if (np.argmax(testint_result)) == testLabel[i]:
                 correct += 1
-                
-        print ("The accruacy of the ANN is %f", correct/np.size(testLabel) * 100 )
-        
+            else:
+                incorrect.append(i)
+            
+        accuracy = correct/np.size(testLabel) * 100 
+        print ("The accruacy of the ANN is",accuracy )
+
+        return accuracy
     
         
 class data_set():
@@ -189,7 +193,7 @@ class test_set():
         d20=[1,2,3,4,5,10,14,19,23,28,33,43]
         d21=[1,2,4,5,10,14,19,23,28,33,38,43]
         d22=[2,3,4,6,10,11,15,16,20,22,23,24,26,30,31,36,36,40,42,43,44]
-        d23=[2,3,4,10,11,15,16,20,22,23,24,26,30,31,36,36,40,42,43,44]
+        d23=[2,3,4,6,10,11,15,16,20,22,23,24,26,30,31,36,36,40,41,43,44]
         d24=[2,3,4,6,10,11,15,16,20,22,23,25,26,30,31,36,36,40,42,43,44]
         d25=[2,3,4,6,10,11,15,16,20,22,23,24,25,30,35,36,40,42,43,44]
         d26=[2,3,4,6,10,11,15,16,20,22,23,25,30,35,36,40,42,43,44]
@@ -221,11 +225,14 @@ get_data = data_set()
 training_data,label_data = get_data.data()
 testing = test_set()
 testing_data,testing_label_data = testing.data()
+total_accuarcy =0
+avg_accuracy = 0
+for i in range(10):
 
-
-output_test = [0,1,0,0,0,0,0,0,0,0]
-#input_test = input_test.reshape(-1,1)
-output_test = np.asanyarray(output_test)#.reshape(-1,1)
-trainings = training(training_data,label_data,5,10,1.5,10000)
-trainings.main(testing_data,testing_label_data)
-
+    print ("running iteration",i)
+    trainings = training(training_data,label_data,5,10,1.5,10000)
+    accuracy = trainings.main(testing_data,testing_label_data)
+    total_accuarcy += accuracy 
+    avg_accuracy = total_accuarcy/(i+1)
+    
+    print ("average accuracy is",avg_accuracy )
